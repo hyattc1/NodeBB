@@ -19,6 +19,31 @@ define('admin/settings', [
 		});
 	}
 
+	// apply initial values from app.config into the DOM fields
+	function applyInitialValues(fields) {
+		const numFields = fields.length;
+		for (let x = 0; x < numFields; x += 1) {
+			const field = fields.eq(x);
+			const key = field.attr('data-field');
+			const inputType = field.attr('type');
+
+			if (!Object.prototype.hasOwnProperty.call(app.config, key)) {
+				continue;
+			}
+
+			if (field.is('input') && inputType === 'checkbox') {
+				const checked = parseInt(app.config[key], 10) === 1;
+				field.prop('checked', checked);
+			} else if (
+				field.is('textarea') ||
+				field.is('select') ||
+				(field.is('input') && DEFAULT_INPUT_TYPES.indexOf(inputType) !== -1)
+			) {
+				field.val(app.config[key]);
+			}
+		}
+	}
+
 	Settings.populateTOC = function () {
 		const headers = $('.settings-header');
 		const tocEl = $('[component="settings/toc"]');
@@ -79,10 +104,7 @@ define('admin/settings', [
 		let field;
 
 		// Handle unsaved changes
-		fields.on('change', function () {
-			app.flags = app.flags || {};
-			app.flags._unsaved = true;
-		});
+		bindUnsavedChange(fields);
 		const defaultInputs = ['text', 'hidden', 'password', 'textarea', 'number'];
 		for (x = 0; x < numFields; x += 1) {
 			field = fields.eq(x);
