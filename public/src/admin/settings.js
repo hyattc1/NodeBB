@@ -135,30 +135,7 @@ define('admin/settings', [
 			ajaxify.refresh();
 		});
 
-		saveBtn.off('click').on('click', function (e) {
-			e.preventDefault();
-
-			const ok = settings.check(document.querySelectorAll('#content [data-field]'));
-			if (!ok) {
-				return;
-			}
-
-			saveFields(fields, function onFieldsSaved(err) {
-				if (err) {
-					return alerts.alert({
-						alert_id: 'config_status',
-						timeout: 2500,
-						title: '[[admin/admin:changes-not-saved]]',
-						message: `[[admin/admin:changes-not-saved-message, ${err.message}]]`,
-						type: 'danger',
-					});
-				}
-
-				app.flags._unsaved = false;
-				Settings.toggleSaveSuccess(saveBtn);
-				hooks.fire('action:admin.settingsSaved');
-			});
-		});
+		wireSaveButton(saveBtn, fields);
 
 		mousetrap.bind('ctrl+s', function (ev) {
 			saveBtn.click();
