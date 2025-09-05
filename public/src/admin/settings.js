@@ -44,6 +44,34 @@ define('admin/settings', [
 		}
 	}
 
+	// wire up the Save button (validation + save + notifications)
+	function wireSaveButton(saveBtn, fields) {
+		saveBtn.off('click').on('click', function (e) {
+			e.preventDefault();
+
+			const ok = settings.check(document.querySelectorAll('#content [data-field]'));
+			if (!ok) {
+				return;
+			}
+
+			saveFields(fields, function onFieldsSaved(err) {
+				if (err) {
+					return alerts.alert({
+						alert_id: 'config_status',
+						timeout: 2500,
+						title: '[[admin/admin:changes-not-saved]]',
+						message: `[[admin/admin:changes-not-saved-message, ${err.message}]]`,
+						type: 'danger',
+					});
+				}
+
+				app.flags._unsaved = false;
+				Settings.toggleSaveSuccess(saveBtn);
+				hooks.fire('action:admin.settingsSaved');
+			});
+		});
+	}
+
 	Settings.populateTOC = function () {
 		const headers = $('.settings-header');
 		const tocEl = $('[component="settings/toc"]');
