@@ -123,7 +123,6 @@ define('admin/settings', [
 	Settings.prepare = function (callback) {
 		// Populate the fields on the page from the config
 		const fields = $('#content [data-field]');
-		const numFields = fields.length;
 		const saveBtn = $('#save');
 		const revertBtn = $('#revert');
 
