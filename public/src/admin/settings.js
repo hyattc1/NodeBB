@@ -1,10 +1,15 @@
 'use strict';
 
+// codebase has been connected to Cursor to allow for AI assistance with source control and coding
+// ChatGPT employed to guide me with more in depth instructions for each step
 
 define('admin/settings', [
 	'uploader', 'mousetrap', 'hooks', 'alerts', 'settings', 'bootstrap',
 ], function (uploader, mousetrap, hooks, alerts, settings, bootstrap) {
 	const Settings = {};
+
+	// helper constant (no behavior change)
+	const DEFAULT_INPUT_TYPES = ['text', 'hidden', 'password', 'textarea', 'number'];
 
 	Settings.populateTOC = function () {
 		const headers = $('.settings-header');
