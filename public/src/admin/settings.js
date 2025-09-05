@@ -11,6 +11,14 @@ define('admin/settings', [
 	// helper constant (no behavior change)
 	const DEFAULT_INPUT_TYPES = ['text', 'hidden', 'password', 'textarea', 'number'];
 
+	// mark app as having unsaved changes when any field changes
+	function bindUnsavedChange(fields) {
+		fields.on('change', function () {
+			app.flags = app.flags || {};
+			app.flags._unsaved = true;
+		});
+	}
+
 	Settings.populateTOC = function () {
 		const headers = $('.settings-header');
 		const tocEl = $('[component="settings/toc"]');
