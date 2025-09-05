@@ -98,27 +98,10 @@ define('admin/settings', [
 		const numFields = fields.length;
 		const saveBtn = $('#save');
 		const revertBtn = $('#revert');
-		let x;
-		let key;
-		let inputType;
-		let field;
 
 		// Handle unsaved changes
 		bindUnsavedChange(fields);
-		const defaultInputs = ['text', 'hidden', 'password', 'textarea', 'number'];
-		for (x = 0; x < numFields; x += 1) {
-			field = fields.eq(x);
-			key = field.attr('data-field');
-			inputType = field.attr('type');
-			if (app.config.hasOwnProperty(key)) {
-				if (field.is('input') && inputType === 'checkbox') {
-					const checked = parseInt(app.config[key], 10) === 1;
-					field.prop('checked', checked);
-				} else if (field.is('textarea') || field.is('select') || (field.is('input') && defaultInputs.indexOf(inputType) !== -1)) {
-					field.val(app.config[key]);
-				}
-			}
-		}
+		applyInitialValues(fields);
 
 		revertBtn.off('click').on('click', function () {
 			ajaxify.refresh();
